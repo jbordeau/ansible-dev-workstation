@@ -14,3 +14,12 @@
         - { candidate: maven, version: 3.6.3 }
       sdkman_defaults:
         java: 11.0.10-open
+  tasks:
+    - name: add sdkman in .zshrc.local
+      blockinfile:
+        path: "/home/{{ ansible_user_id }}/.zshrc.local"
+        insertafter: EOF
+        block: |
+           #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+           export SDKMAN_DIR="/home/{{ ansible_user_id }}/.sdkman"
+           [[ -s "/home/{{ ansible_user_id }}/.sdkman/bin/sdkman-init.sh" ]] && source "/home/{{ ansible_user_id }}/.sdkman/bin/sdkman-init.sh"

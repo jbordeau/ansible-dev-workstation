@@ -1,0 +1,34 @@
+---
+
+- hosts: dev
+  tasks:
+    - name: Add an Apt signing key for mongo
+      ansible.builtin.apt_key:
+        url: https://www.mongodb.org/static/pgp/server-4.2.asc
+        state: present
+      become: yes
+    - name: "Add mongo repository into sources list"
+      ansible.builtin.apt_repository:
+        repo: deb http://repo.mongodb.org/apt/debian buster/mongodb-org/4.2 main
+        filename: mongodb
+        state: present
+      become: yes
+    - name: "Install mongodb shell and tools"
+      apt:
+        pkg:
+          - mongodb-org-shell
+          - mongodb-org-tools
+        state: present
+      become: yes
+    - name: Download nosqlbooster
+      get_url:
+        url: https://s3.mongobooster.com/download/releasesv6/nosqlbooster4mongo-6.2.9.AppImage
+        dest: "/opt/nosqlbooster4mongo-6.2.9.AppImage"
+        mode: u+x
+      become: yes
+    - name: add exe nosqlbooster in PATH
+      ansible.builtin.file:
+        src: "/opt/nosqlbooster4mongo-6.2.9.AppImage"
+        dest: "/usr/local/bin/nosqlbooster"
+        state: link
+      become: yes
