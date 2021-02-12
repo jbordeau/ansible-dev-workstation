@@ -24,6 +24,7 @@
       ansible.builtin.copy:
         src: "{{ item }}"
         dest: "/home/{{ ansible_user_id }}/.ssh/"
+        mode: '0600'
       with_fileglob: "users/files/{{ ansible_user_id }}/enovea_rsa*"
     - name: link ssh key
       ansible.builtin.file:
