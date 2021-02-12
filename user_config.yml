@@ -1,0 +1,37 @@
+---
+
+- name: "install {{ ansible_user_id }} config"
+  hosts: dev
+  tasks:
+    - name: copy gitconfig
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/gitconfig"
+        dest: "/home/{{ ansible_user_id }}/.gitconfig"
+    - name: copy ssh config  
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/config"
+        dest: "/home/{{ ansible_user_id }}/.ssh/config"
+    - name: copy /etc/hosts
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/hosts" 
+        dest: "/etc/hosts"
+      become: yes
+    - name: copy maven settings
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/settings_gitlab_com.xml"
+        dest: "/home/{{ ansible_user_id }}/.m2/settings.xml"
+    - name: copy ssh key
+      ansible.builtin.copy:
+        src: "{{ item }}"
+        dest: "/home/{{ ansible_user_id }}/.ssh/"
+      with_fileglob: "users/files/{{ ansible_user_id }}/enovea_rsa*"
+    - name: link ssh key
+      ansible.builtin.file:
+        src: "/home/{{ ansible_user_id }}/.ssh/enovea_rsa"
+        dest: "/home/{{ ansible_user_id }}/.ssh/id_rsa"
+        state: link
+    - name: link ssh key
+      ansible.builtin.file:
+        src: "/home/{{ ansible_user_id }}/.ssh/enovea_rsa.pub"
+        dest: "/home/{{ ansible_user_id }}/.ssh/id_rsa.pub"
+        state: link

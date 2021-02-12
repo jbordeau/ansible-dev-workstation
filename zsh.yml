@@ -1,0 +1,24 @@
+---
+
+- name: Install Zsh and plugin etc.
+  vars:
+    zsh_antigen_bundles_extras:
+      - mvn
+      - git
+      - debian
+      - z
+      - sudo
+      - jump
+      - common-aliases
+      - git
+  hosts: dev
+  roles:
+    - role: zsh
+      become: yes
+  tasks:
+    - name: Install fonts powerline
+      apt:
+        pkg:
+          - fonts-powerline
+          - fzf
+      become: yes

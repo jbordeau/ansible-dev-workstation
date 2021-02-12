@@ -1,0 +1,8 @@
+---
+
+- name: Install Intellij
+  hosts: dev
+  vars: 
+  - intellij_edition: ultimate
+  roles:
+    - role: intellij

@@ -1,0 +1,11 @@
+---
+
+- hosts: dev
+  tasks:
+    - name: install tools
+      apt:
+        pkg:
+         - git
+         - vim
+         - openvpn
+      become: yes
