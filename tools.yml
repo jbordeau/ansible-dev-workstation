@@ -10,4 +10,5 @@
          - openvpn
          - resolvconf
          - jq
+         - vagrant
       become: yes
