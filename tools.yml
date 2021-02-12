@@ -9,4 +9,5 @@
          - vim
          - openvpn
          - resolvconf
+         - jq
       become: yes
