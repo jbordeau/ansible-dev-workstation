@@ -8,4 +8,5 @@
          - git
          - vim
          - openvpn
+         - resolvconf
       become: yes
