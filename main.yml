@@ -7,3 +7,4 @@
 - import_playbook: intellij.yml
 - import_playbook: user_config.yml
 - import_playbook: mongotools.yml
+- import_playbook: nvm.yml

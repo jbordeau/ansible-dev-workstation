@@ -1,3 +1,4 @@
 users/files/**
 !users/files/README.md
 *iml
+galaxy/**

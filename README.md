@@ -10,5 +10,5 @@ ansible-galaxy collection install -r requirements.yml
 
 Run a playbook on localhost:
 ```bash
-ansible-playbook -i hosts -K docker.yml
+ansible-playbook -K main.yml
 ```

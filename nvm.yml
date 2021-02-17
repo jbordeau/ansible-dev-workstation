@@ -1,0 +1,10 @@
+---
+
+# must be run twice. One to update zsh and a second one, after executing a new shell
+
+- name: Install nvm to manage nodejs
+  hosts: dev
+  roles:
+    - role: nvm
+      nvm_shell_init_file: ~/.zshrc.local
+      nvm_node_version: 'lts'
