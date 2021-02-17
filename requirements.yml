@@ -14,6 +14,8 @@ roles:
   - name: nvm
     src: https://github.com/stephdewit/ansible-nvm
     version: v3.3.0
+  - name: sysctl
+    src: robertdebock.sysctl
 
 collections:
   - community.docker
