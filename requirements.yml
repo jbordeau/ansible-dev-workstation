@@ -16,6 +16,8 @@ roles:
     version: v3.3.0
   - name: sysctl
     src: robertdebock.sysctl
+  - name: hugo
+    src: darkwizard242.hugo
 
 collections:
   - community.docker

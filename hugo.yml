@@ -1,0 +1,9 @@
+---
+
+- name: Install hugo extended
+  hosts: dev
+  roles:
+    - role: hugo
+      hugo_app: hugo_extended
+      hugo_bin_path: /usr/local/bin
+  become: yes
