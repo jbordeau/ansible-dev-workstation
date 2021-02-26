@@ -9,3 +9,4 @@
 - import_playbook: mongotools.yml
 - import_playbook: nvm.yml
 - import_playbook: hugo.yml
+- import_playbook: bluetooth.yml

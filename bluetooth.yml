@@ -1,0 +1,13 @@
+---
+
+- name: Install pulse audio
+  hosts: dev
+  tasks:
+    - name: "Install pulse audio module bluetooth"
+      apt:
+        pkg:
+          - pulseaudio-module-bluetooth
+        state: present
+      become: yes
+    - name: "Load module bluetooth discovering"
+      raw: pactl load-module module-bluetooth-discover
