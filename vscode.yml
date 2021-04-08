@@ -1,0 +1,12 @@
+---
+
+- name: Install VSCode
+  hosts: dev
+  become: yes
+  vars: 
+  - vscode_extension:
+      - senx.warpscript-language
+      - vscjava.vscode-maven
+      - 
+  roles:
+    - role: vscode

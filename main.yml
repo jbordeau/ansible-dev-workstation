@@ -5,6 +5,7 @@
 - import_playbook: zsh.yml
 - import_playbook: sdkman.yml
 - import_playbook: intellij.yml
+- import_playbook: vscode.yml
 - import_playbook: user_config.yml
 - import_playbook: mongotools.yml
 - import_playbook: nvm.yml

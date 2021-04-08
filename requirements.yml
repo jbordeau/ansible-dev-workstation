@@ -18,6 +18,8 @@ roles:
     src: robertdebock.sysctl
   - name: hugo
     src: darkwizard242.hugo
+  - name: vscode
+    src: ngetchell.vscode
 
 collections:
   - community.docker
