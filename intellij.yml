@@ -4,5 +4,6 @@
   hosts: dev
   vars: 
   - intellij_edition: ultimate
+  - intellij_version: '2021.1'
   roles:
     - role: intellij

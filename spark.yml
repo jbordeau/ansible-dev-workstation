@@ -1,0 +1,7 @@
+---
+
+- name: Install Apache Spark
+  hosts: dev
+  become: yes
+  roles:
+    - role: apache-spark
