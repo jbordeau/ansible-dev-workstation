@@ -20,6 +20,8 @@ roles:
     src: darkwizard242.hugo
   - name: vscode
     src: ngetchell.vscode
+  - name: golang
+    src: gantsign.golang
 
 collections:
   - community.docker

@@ -1,5 +1,11 @@
 ---
 
+- name: Install language Golang
+  hosts: dev
+  roles:
+    - role: golang
+  become: yes
+
 - name: Install hugo extended
   hosts: dev
   roles:
