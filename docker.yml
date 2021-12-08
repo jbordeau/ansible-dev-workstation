@@ -6,7 +6,7 @@
     - role: geerlingguy.docker
       vars:
         # for fix debian testing bullseye
-        docker_apt_repository: "deb [arch=amd64] https://download.docker.com/linux/debian buster stable"
+        docker_apt_repository: "deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable"
         docker_install_compose: true
         docker_compose_version: "1.28.2"
         docker_users:

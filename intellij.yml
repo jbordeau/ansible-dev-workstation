@@ -2,8 +2,8 @@
 
 - name: Install Intellij
   hosts: dev
-  vars: 
-  - intellij_edition: ultimate
-  - intellij_version: '2021.1'
+  vars:
+    - intellij_edition: ultimate
+  - intellij_version: '2021.2.3'
   roles:
     - role: intellij

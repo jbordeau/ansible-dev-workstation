@@ -1,5 +1,5 @@
 ---
- # add discord (on debian bullseye, use the .tgz instead of the .deb
+# add discord (on debian bullseye, use the .tgz instead of the .deb
 - hosts: dev
   tasks:
     - name: Download teams deb
@@ -9,4 +9,5 @@
     - name: Install teams
       apt:
         deb: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
+  become: yes
     
