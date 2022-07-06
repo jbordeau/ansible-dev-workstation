@@ -6,11 +6,11 @@
   hosts: dev
   roles:
     - role: nvm
-      nvm_shell_init_file: ~/.zshrc.local
+      nvm_shell_init_file: /home/jbordeau/.zshrc.local
       nvm_node_version: 'lts'
     - role: sysctl
       tags: sysctl
       sysctl_items:
         - name: fs.inotify.max_user_watches
           value: 524288
-      become: yes
+  become: yes

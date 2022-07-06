@@ -6,11 +6,12 @@
       - mvn
       - git
       - debian
-      - z
-      - sudo
+      - agkozak/zsh-z
       - jump
       - common-aliases
       - git
+      - git-flow-completion
+      - thefuck
   hosts: dev
   roles:
     - role: zsh

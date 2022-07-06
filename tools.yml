@@ -11,4 +11,7 @@
          - resolvconf
          - jq
          - vagrant
+         - bat
+         - ripgrep
+         - thefuck
       become: yes
