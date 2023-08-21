@@ -9,9 +9,7 @@
       sdkman_auto_answer: true
       sdkman_update: true
       sdkman_install_packages:
-        - { candidate: java, version: 8.0.282-open }
         - { candidate: java, version: 11.0.10-open }
-        - { candidate: maven, version: 3.6.3 }
       sdkman_defaults:
         java: 11.0.10-open
   tasks:

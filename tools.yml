@@ -8,11 +8,11 @@
          - git
          - vim
          - openvpn
-         - resolvconf
          - jq
          - vagrant
          - bat
          - ripgrep
          - thefuck
-         - kubectx
+         - docker.io
+         - yakuake
       become: yes
