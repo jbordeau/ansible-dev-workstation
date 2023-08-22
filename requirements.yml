@@ -1,5 +1,8 @@
 ---
 roles:
+  - name: geerlingguy.docker
+    src: https://github.com/geerlingguy/ansible-role-docker.git
+    version: master
   - name: comcast.sdkman
     src: comcast.sdkman
   - name: intellij

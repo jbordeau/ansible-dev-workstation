@@ -1,0 +1,10 @@
+---
+
+- name: "Install docker"
+  hosts: dev
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_users:
+          - "{{ ansible_user_id }}"
+      become: yes

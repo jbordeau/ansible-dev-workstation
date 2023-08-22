@@ -13,6 +13,5 @@
          - bat
          - ripgrep
          - thefuck
-         - docker.io
          - yakuake
       become: yes
