@@ -22,3 +22,9 @@
           - fonts-powerline
           - fzf
       become: yes
+    - name: Ensure the user  has a zsh shell.
+      user:
+        name: "{{ ansible_user_id }"
+        shell: /bin/zsh
+        state: present
+      become: yes

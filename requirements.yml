@@ -10,7 +10,7 @@ roles:
     version: 6.13.0
   - name: zsh
     src: https://github.com/viasite-ansible/ansible-role-zsh.git
-    version: v3.3.2
+    version: v3.5.2
   - name: nvm
     src: https://github.com/stephdewit/ansible-nvm
     version: v3.3.0
