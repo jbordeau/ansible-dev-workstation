@@ -2,12 +2,34 @@
 # add discord (on debian bullseye, use the .tgz instead of the .deb
 - hosts: dev
   tasks:
+    - name: Slack
+      snap:
+        name:
+          - slack
     - name: Download teams deb
       get_url:
         url: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x40c&culture=fr-fr&country=FR
         dest: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
+      tags: teams
     - name: Install teams
       apt:
         deb: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
+      tags: teams
+    - name: Add an Apt signing key for Signal
+      ansible.builtin.apt_key:
+        url: https://updates.signal.org/desktop/apt/keys.asc
+        state: present
+      tags: signal
+    - name: "Add Signal repository"
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main
+        filename: signal-xenial.list
+        state: present
+      tags: signal
+    - name: install Signal
+      apt:
+        pkg:
+          - signal-desktop
+      tags: signal
   become: yes
     

@@ -4,7 +4,7 @@ roles:
     src: comcast.sdkman
   - name: intellij
     src: https://github.com/gantsign/ansible-role-intellij.git
-    version: 6.5.3
+    version: 6.13.0
   - name: zsh
     src: https://github.com/viasite-ansible/ansible-role-zsh.git
     version: v3.3.2

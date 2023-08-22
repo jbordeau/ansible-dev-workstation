@@ -10,6 +10,7 @@
       sdkman_update: true
       sdkman_install_packages:
         - { candidate: java, version: 11.0.10-open }
+        - { candidate: maven }
       sdkman_defaults:
         java: 11.0.10-open
   tasks:

@@ -5,8 +5,8 @@
   become: yes
   vars: 
   - vscode_extension:
-      - senx.warpscript-language
-      - vscjava.vscode-maven
+      - vscjava.vscode-java-pack
       - k--kato.intellij-idea-keybindings
+      - redhat.vscode-quarkus
   roles:
     - role: vscode
