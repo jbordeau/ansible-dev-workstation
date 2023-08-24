@@ -6,6 +6,7 @@
       snap:
         name:
           - slack
+      tags: slack
     - name: Download teams deb
       get_url:
         url: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x40c&culture=fr-fr&country=FR
