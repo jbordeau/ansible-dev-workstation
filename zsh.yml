@@ -11,6 +11,7 @@
       - common-aliases
       - git
       - thefuck
+      - asdf
   hosts: dev
   roles:
     - role: zsh

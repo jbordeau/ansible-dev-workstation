@@ -3,7 +3,7 @@
 - import_playbook: tools.yml
 - import_playbook: docker.yml
 - import_playbook: zsh.yml
-- import_playbook: sdkman.yml
+- import_playbook: asdf.yml
 - import_playbook: intellij.yml
 - import_playbook: vscode.yml
   #- import_playbook: user_config.yml

@@ -1,0 +1,19 @@
+- name: install asdf
+  hosts: 'dev'
+  become: true
+  vars:
+    asdf_user: "{{ ansible_user_id }}"
+    asdf_group: "{{ ansible_user_id }}"
+    asdf_plugins:
+      - name: maven
+        versions: ["3.9.4"]
+        global: "3.9.4"
+      - name: java
+        repository: "https://github.com/halcyon/asdf-java.git"
+        versions: ["openjdk-11"]
+        global: ["openjdk-11"]
+      - name: nodejs
+        versions: ["18.7.1"]
+        global: "18.7.1"
+  roles:
+    - asdf
