@@ -5,8 +5,6 @@ roles:
     version: master
   - name: comcast.sdkman
     src: comcast.sdkman
-  - name: asdf
-    src: https://github.com/cimon-io/ansible-role-asdf
   - name: intellij
     src: https://github.com/gantsign/ansible-role-intellij.git
     version: 6.13.0
@@ -22,8 +20,6 @@ roles:
     src: darkwizard242.hugo
   - name: vscode
     src: ngetchell.vscode
-  - name: golang
-    src: gantsign.golang
 
 collections:
   - community.docker

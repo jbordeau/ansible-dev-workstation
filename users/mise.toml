@@ -1,0 +1,17 @@
+[tools]
+## dev
+java = "openjdk-21"
+maven= "3.9.4"
+nodejs = "20.18.0"
+quarkus = "3.14.1"
+go = "1.23.2"
+
+## k8s
+kubectl = "latest"
+kubectx = "latest"
+helm = "latest"
+helm-diff = "latest"
+helmfile = "latest"
+k9s = "latest"
+minikube = "latest" # experimental
+kind = "latest"

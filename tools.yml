@@ -6,6 +6,7 @@
       apt:
         pkg:
          - git
+         - curl
          - vim
          - openvpn
          - jq
