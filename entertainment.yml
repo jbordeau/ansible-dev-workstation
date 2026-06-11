@@ -1,23 +1,24 @@
 ---
 
-- hosts: dev
+- name: Install Spotify
+  hosts: dev
+  become: yes
   tasks:
-    - name: Add Spotify apt key.
-      shell: >
-        curl -sSL https://download.spotify.com/debian/pubkey_5E3C45D7B312C643.gpg | apt-key add -
-      args:
-        warn: false
-      become: yes
-
-    - name: Add Spotify repository.
-      apt_repository:
-        repo: "deb http://repository.spotify.com stable non-free"
+    - name: Add Spotify signing key
+      ansible.builtin.apt_key:
+        url: https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg
         state: present
-        update_cache: true
-      become: yes
+      tags: spotify
 
-    - name: "Install Spotify"
-      apt:
+    - name: Add Spotify repository
+      ansible.builtin.apt_repository:
+        repo: deb http://repository.spotify.com stable non-free
+        filename: spotify
+        state: present
+      tags: spotify
+
+    - name: Install Spotify
+      ansible.builtin.apt:
         pkg:
           - spotify-client
-      become: yes
+      tags: spotify

@@ -28,4 +28,27 @@
           - signal-desktop
       tags: signal
   become: yes
-    
+
+- name: Install Slack
+  hosts: dev
+  become: yes
+  tasks:
+    - name: Add Slack signing key
+      ansible.builtin.apt_key:
+        url: https://packagecloud.io/slacktechnologies/slack/gpgkey
+        state: present
+      tags: slack
+
+    - name: Add Slack repository
+      ansible.builtin.apt_repository:
+        repo: deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main
+        filename: slack
+        state: present
+      tags: slack
+
+    - name: Install Slack
+      ansible.builtin.apt:
+        pkg:
+          - slack-desktop
+      tags: slack
+

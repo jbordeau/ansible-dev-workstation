@@ -16,4 +16,51 @@
          - thefuck
          - yakuake
          - snapd
+         - htop
       become: yes
+
+- name: Install Google Chrome
+  hosts: dev
+  become: yes
+  tasks:
+    - name: Add Google Chrome signing key
+      ansible.builtin.apt_key:
+        url: https://dl.google.com/linux/linux_signing_key.pub
+        state: present
+      tags: chrome
+
+    - name: Add Google Chrome repository
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+        filename: google-chrome
+        state: present
+      tags: chrome
+
+    - name: Install Google Chrome
+      ansible.builtin.apt:
+        pkg:
+          - google-chrome-stable
+      tags: chrome
+
+- name: Install WezTerm
+  hosts: dev
+  become: yes
+  tasks:
+    - name: Add WezTerm signing key
+      ansible.builtin.apt_key:
+        url: https://apt.fury.io/wez/gpg.key
+        state: present
+      tags: wezterm
+
+    - name: Add WezTerm repository
+      ansible.builtin.apt_repository:
+        repo: deb https://apt.fury.io/wez/ * *
+        filename: wezterm
+        state: present
+      tags: wezterm
+
+    - name: Install WezTerm
+      ansible.builtin.apt:
+        pkg:
+          - wezterm
+      tags: wezterm

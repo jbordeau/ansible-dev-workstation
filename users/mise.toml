@@ -2,9 +2,15 @@
 ## dev
 java = "openjdk-21"
 maven= "3.9.4"
-nodejs = "20.18.0"
+nodejs = "23"
 quarkus = "3.14.1"
 go = "1.23.2"
+aws = "latest"
+rust = "latest"
+fzf = "latest"
+lazygit = "latest"
+#git-delta
+delta = "latest"
 
 ## k8s
 kubectl = "latest"
@@ -15,3 +21,13 @@ helmfile = "latest"
 k9s = "latest"
 minikube = "latest" # experimental
 kind = "latest"
+
+## IA
+opencode = "latest"
+"npm:ccstatusline" = "latest"
+ollama = "latest"
+claude-code = "latest"
+
+## ops
+argocd = "latest"
+httpie-go = "latest"
