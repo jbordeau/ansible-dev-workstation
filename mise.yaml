@@ -1,28 +1,27 @@
 ---
-- name: Playbook pour installer Mise et configurer Zsh
-  hosts: dev
-  become: yes
-  tasks:
 
-    - name: Installer curl si non présent
+- name: Install Mise
+  hosts: dev
+  tasks:
+    - name: Install curl
       ansible.builtin.package:
         name: curl
         state: present
+      become: yes
 
-    - name: Télécharger et exécuter le script d'installation de Mise
-      ansible.builtin.shell: |
-        curl https://mise.run | sh
+    - name: Download and install Mise
+      ansible.builtin.shell: curl https://mise.run | sh
       args:
         creates: ~/.local/bin/mise
 
-    - name: Ajouter Mise à l'initialisation de Zsh
+    - name: Add Mise to Zsh init
       ansible.builtin.lineinfile:
         path: ~/.zshrc.local
         line: 'eval "$(~/.local/bin/mise activate zsh)"'
         create: yes
         state: present
 
-    - name: mise config
-      ansible.builtin.file:
+    - name: Copy mise config
+      ansible.builtin.copy:
         src: "users/mise.toml"
         dest: "/home/{{ ansible_user_id }}/mise.toml"

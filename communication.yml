@@ -1,47 +1,50 @@
 ---
-# add discord (on debian bullseye, use the .tgz instead of the .deb
-- hosts: dev
-  tasks:
-    - name: Download teams deb
-      get_url:
-        url: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x40c&culture=fr-fr&country=FR
-        dest: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
-      tags: teams
-    - name: Install teams
-      apt:
-        deb: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
-      tags: teams
-    - name: Add an Apt signing key for Signal
-      ansible.builtin.apt_key:
-        url: https://updates.signal.org/desktop/apt/keys.asc
-        state: present
-      tags: signal
-    - name: "Add Signal repository"
-      ansible.builtin.apt_repository:
-        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/signal-desktop-keyring.gpg] https://updates.signal.org/desktop/apt xenial main
-        filename: signal-xenial.list
-        state: present
-      tags: signal
-    - name: install Signal
-      apt:
-        pkg:
-          - signal-desktop
-      tags: signal
-  become: yes
 
-- name: Install Slack
+- name: Install communication tools
   hosts: dev
   become: yes
   tasks:
-    - name: Add Slack signing key
-      ansible.builtin.apt_key:
-        url: https://packagecloud.io/slacktechnologies/slack/gpgkey
+    - name: Download Teams deb
+      ansible.builtin.get_url:
+        url: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x40c&culture=fr-fr&country=FR
+        dest: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
+      tags: teams
+
+    - name: Install Teams
+      ansible.builtin.apt:
+        deb: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
+      tags: teams
+
+    - name: Add Signal signing key
+      ansible.builtin.get_url:
+        url: https://updates.signal.org/desktop/apt/keys.asc
+        dest: /etc/apt/keyrings/signal-desktop.asc
+        mode: '0644'
+      tags: signal
+
+    - name: Add Signal repository
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/signal-desktop.asc] https://updates.signal.org/desktop/apt xenial main
+        filename: signal
         state: present
+      tags: signal
+
+    - name: Install Signal
+      ansible.builtin.apt:
+        pkg:
+          - signal-desktop
+      tags: signal
+
+    - name: Add Slack signing key
+      ansible.builtin.get_url:
+        url: https://packagecloud.io/slacktechnologies/slack/gpgkey
+        dest: /etc/apt/keyrings/slack.asc
+        mode: '0644'
       tags: slack
 
     - name: Add Slack repository
       ansible.builtin.apt_repository:
-        repo: deb https://packagecloud.io/slacktechnologies/slack/debian/ jessie main
+        repo: deb [signed-by=/etc/apt/keyrings/slack.asc] https://packagecloud.io/slacktechnologies/slack/debian/ jessie main
         filename: slack
         state: present
       tags: slack
@@ -51,4 +54,3 @@
         pkg:
           - slack-desktop
       tags: slack
-

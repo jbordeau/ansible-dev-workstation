@@ -1,37 +1,35 @@
 ---
 
-- hosts: dev
-  tasks:
-    - name: install tools
-      apt:
-        pkg:
-         - git
-         - curl
-         - vim
-         - openvpn
-         - jq
-         - vagrant
-         - bat
-         - ripgrep
-         - thefuck
-         - yakuake
-         - snapd
-         - htop
-      become: yes
-
-- name: Install Google Chrome
+- name: Install CLI tools
   hosts: dev
   become: yes
   tasks:
+    - name: Install apt packages
+      ansible.builtin.apt:
+        pkg:
+          - git
+          - curl
+          - vim
+          - openvpn
+          - jq
+          - vagrant
+          - bat
+          - ripgrep
+          - thefuck
+          - yakuake
+          - snapd
+          - htop
+
     - name: Add Google Chrome signing key
-      ansible.builtin.apt_key:
+      ansible.builtin.get_url:
         url: https://dl.google.com/linux/linux_signing_key.pub
-        state: present
+        dest: /etc/apt/keyrings/google-chrome.asc
+        mode: '0644'
       tags: chrome
 
     - name: Add Google Chrome repository
       ansible.builtin.apt_repository:
-        repo: deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main
+        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/google-chrome.asc] https://dl.google.com/linux/chrome/deb/ stable main
         filename: google-chrome
         state: present
       tags: chrome
@@ -42,19 +40,16 @@
           - google-chrome-stable
       tags: chrome
 
-- name: Install WezTerm
-  hosts: dev
-  become: yes
-  tasks:
     - name: Add WezTerm signing key
-      ansible.builtin.apt_key:
+      ansible.builtin.get_url:
         url: https://apt.fury.io/wez/gpg.key
-        state: present
+        dest: /etc/apt/keyrings/wezterm.asc
+        mode: '0644'
       tags: wezterm
 
     - name: Add WezTerm repository
       ansible.builtin.apt_repository:
-        repo: deb https://apt.fury.io/wez/ * *
+        repo: deb [signed-by=/etc/apt/keyrings/wezterm.asc] https://apt.fury.io/wez/ * *
         filename: wezterm
         state: present
       tags: wezterm

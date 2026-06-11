@@ -1,18 +1,19 @@
 ---
 
-- name: Install Spotify
+- name: Install entertainment apps
   hosts: dev
   become: yes
   tasks:
     - name: Add Spotify signing key
-      ansible.builtin.apt_key:
+      ansible.builtin.get_url:
         url: https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg
-        state: present
+        dest: /etc/apt/keyrings/spotify.asc
+        mode: '0644'
       tags: spotify
 
     - name: Add Spotify repository
       ansible.builtin.apt_repository:
-        repo: deb http://repository.spotify.com stable non-free
+        repo: deb [signed-by=/etc/apt/keyrings/spotify.asc] http://repository.spotify.com stable non-free
         filename: spotify
         state: present
       tags: spotify
