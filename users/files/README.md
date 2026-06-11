@@ -19,6 +19,7 @@ Add a directory named as your username and place the following files before runn
 │   └── config
 ├── wezterm/               → ~/.config/wezterm/
 │   └── wezterm.lua
+├── p10k.zsh               → ~/.p10k.zsh
 ├── docker/                → ~/.docker/
 │   └── config.json
 └── claude/                → ~/.claude/

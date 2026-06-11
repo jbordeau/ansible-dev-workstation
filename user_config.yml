@@ -73,6 +73,12 @@
         dest: "/home/{{ ansible_user_id }}/.docker/config.json"
       tags: docker
 
+    - name: copy p10k config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/p10k.zsh"
+        dest: "/home/{{ ansible_user_id }}/.p10k.zsh"
+      tags: zsh
+
     - name: copy claude settings
       ansible.builtin.copy:
         src: "users/files/{{ ansible_user_id }}/claude/settings.json"
