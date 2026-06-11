@@ -12,7 +12,6 @@
           - vim
           - openvpn
           - jq
-          - vagrant
           - bat
           - ripgrep
           - thefuck
