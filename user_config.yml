@@ -36,3 +36,45 @@
         src: "/home/{{ ansible_user_id }}/.ssh/enovea_rsa.pub"
         dest: "/home/{{ ansible_user_id }}/.ssh/id_rsa.pub"
         state: link
+
+    - name: copy k9s config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/k9s/"
+        dest: "/home/{{ ansible_user_id }}/.config/k9s/"
+      tags: k9s
+
+    - name: copy lazygit config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/lazygit/"
+        dest: "/home/{{ ansible_user_id }}/.config/lazygit/"
+      tags: lazygit
+
+    - name: copy glab-cli config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/glab-cli/"
+        dest: "/home/{{ ansible_user_id }}/.config/glab-cli/"
+      tags: glab
+
+    - name: copy argocd config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/argocd/"
+        dest: "/home/{{ ansible_user_id }}/.config/argocd/"
+      tags: argocd
+
+    - name: copy wezterm config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/wezterm/"
+        dest: "/home/{{ ansible_user_id }}/.config/wezterm/"
+      tags: wezterm
+
+    - name: copy docker config
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/docker/config.json"
+        dest: "/home/{{ ansible_user_id }}/.docker/config.json"
+      tags: docker
+
+    - name: copy claude settings
+      ansible.builtin.copy:
+        src: "users/files/{{ ansible_user_id }}/claude/settings.json"
+        dest: "/home/{{ ansible_user_id }}/.claude/settings.json"
+      tags: claude
