@@ -3,8 +3,8 @@
 - name: Install VSCode
   hosts: dev
   become: yes
-  vars: 
-  - vscode_extension:
+  vars:
+    vscode_extension:
       - vscjava.vscode-java-pack
       - k--kato.intellij-idea-keybindings
       - redhat.vscode-quarkus
