@@ -4,17 +4,6 @@
   hosts: dev
   become: yes
   tasks:
-    - name: Download Teams deb
-      ansible.builtin.get_url:
-        url: https://go.microsoft.com/fwlink/p/?LinkID=2112886&clcid=0x40c&culture=fr-fr&country=FR
-        dest: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
-      tags: teams
-
-    - name: Install Teams
-      ansible.builtin.apt:
-        deb: "/home/{{ ansible_user_id }}/Téléchargements/teams.deb"
-      tags: teams
-
     - name: Add Signal signing key
       ansible.builtin.get_url:
         url: https://updates.signal.org/desktop/apt/keys.asc
