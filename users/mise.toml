@@ -31,3 +31,4 @@ claude-code = "latest"
 ## ops
 argocd = "latest"
 httpie-go = "latest"
+bitwarden = "latest"

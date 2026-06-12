@@ -19,6 +19,31 @@
           - snapd
           - htop
 
+    - name: Set MEGAsync repo URL
+      ansible.builtin.set_fact:
+        megasync_repo_url: "{{ 'https://mega.nz/linux/repo/Debian_' ~ ansible_distribution_major_version ~ '/' if ansible_distribution == 'Debian' else 'https://mega.nz/linux/repo/xUbuntu_' ~ ansible_distribution_version ~ '/' }}"
+      tags: megasync
+
+    - name: Add MEGAsync signing key
+      ansible.builtin.get_url:
+        url: "{{ megasync_repo_url }}Release.key"
+        dest: /etc/apt/keyrings/megasync.asc
+        mode: '0644'
+      tags: megasync
+
+    - name: Add MEGAsync repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/etc/apt/keyrings/megasync.asc] {{ megasync_repo_url }} ./"
+        filename: megasync
+        state: present
+      tags: megasync
+
+    - name: Install MEGAsync
+      ansible.builtin.apt:
+        pkg:
+          - megasync
+      tags: megasync
+
     - name: Add Google Chrome signing key
       ansible.builtin.get_url:
         url: https://dl.google.com/linux/linux_signing_key.pub
