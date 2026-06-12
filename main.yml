@@ -6,6 +6,7 @@
 - import_playbook: mise.yml
 - import_playbook: intellij.yml
 - import_playbook: vscode.yml
+- import_playbook: rebased.yml
 - import_playbook: entertainment.yml
 - import_playbook: communication.yml
   #- import_playbook: user_config.yml

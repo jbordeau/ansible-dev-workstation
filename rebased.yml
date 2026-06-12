@@ -1,0 +1,30 @@
+---
+
+- name: Install Rebased
+  hosts: dev
+  vars:
+    rebased_version: "1.1.3"
+    rebased_install_dir: "/home/{{ ansible_user_id }}/.local/bin"
+    rebased_desktop_dir: "/home/{{ ansible_user_id }}/.local/share/applications"
+  tasks:
+    - name: Ensure install directory exists
+      ansible.builtin.file:
+        path: "{{ rebased_install_dir }}"
+        state: directory
+
+    - name: Download Rebased AppImage
+      ansible.builtin.get_url:
+        url: "https://github.com/DetachHead/rebased/releases/download/{{ rebased_version }}/Rebased-x86_64.AppImage"
+        dest: "{{ rebased_install_dir }}/rebased"
+        mode: '0755'
+
+    - name: Create desktop entry
+      ansible.builtin.copy:
+        dest: "{{ rebased_desktop_dir }}/rebased.desktop"
+        content: |
+          [Desktop Entry]
+          Name=Rebased
+          Exec={{ rebased_install_dir }}/rebased
+          Type=Application
+          Categories=Development;
+          Comment=Interactive rebase tool for Git
