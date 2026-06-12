@@ -1,0 +1,22 @@
+---
+
+- name: Install AWS VPN Client
+  hosts: dev
+  become: yes
+  tasks:
+    - name: Add AWS VPN Client signing key
+      ansible.builtin.get_url:
+        url: https://d20adtppz83p9s.cloudfront.net/GTK/latest/debian-repo/awsvpnclient_public_key.asc
+        dest: /etc/apt/keyrings/awsvpnclient.asc
+        mode: '0644'
+
+    - name: Add AWS VPN Client repository
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64 signed-by=/etc/apt/keyrings/awsvpnclient.asc] https://d20adtppz83p9s.cloudfront.net/GTK/latest/debian-repo ubuntu main
+        filename: aws-vpn-client
+        state: present
+
+    - name: Install AWS VPN Client
+      ansible.builtin.apt:
+        pkg:
+          - awsvpnclient
