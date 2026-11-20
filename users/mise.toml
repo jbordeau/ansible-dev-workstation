@@ -26,9 +26,3 @@ kind = "latest"
 opencode = "latest"
 "npm:ccstatusline" = "latest"
 ollama = "latest"
-claude-code = "latest"
-
-## ops
-argocd = "latest"
-httpie-go = "latest"
-bitwarden = "latest"
