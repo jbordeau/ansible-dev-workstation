@@ -1,0 +1,136 @@
+# syntax=docker/sandbox-kit:3
+#
+# Mixin Docker Sandboxes (sbx) personnel : la status line de l'hôte (claude-hud + ligne de
+# diagnostic du prompt cache) dans la VM, que sbx n'importe pas depuis ~/.claude.
+# claude-hud est épinglé sur le commit installé sur l'hôte, bun sur la version de l'hôte.
+#
+# Usage : sbx run claude --kit ~/workspace/perso/ansible-dev-workstation/users/sbx-kits/claude-statusline .
+schemaVersion: "3"
+kind: mixin
+displayName: Claude status line (claude-hud)
+description: claude-hud et la ligne de cache de la status line de l'hôte
+requires: ["claude"]
+capabilities:
+  - type: com.docker.sandbox/network-policy@1
+    config:
+      install:
+        allow:
+          - github.com:443
+          - release-assets.githubusercontent.com:443
+          - objects.githubusercontent.com:443
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      install:
+        - description: Installer bun (version épinglée, sha256 vérifié)
+          user: "0"
+          command: |
+            set -eu
+            version=1.4.4
+            sha256=e0446eb55995772eb9894bebae9a6be368d985a8b9271ee124486f9946eedd76
+            arch=$(uname -m)
+            [ "$arch" = x86_64 ] || { echo "claude-statusline: architecture $arch non gérée" >&2; exit 1; }
+            tmp=$(mktemp -d)
+            curl -fsSL -o "$tmp/bun.zip" \
+              "https://github.com/oven-sh/bun/releases/download/bun-v$version/bun-linux-x64-baseline.zip"
+            echo "$sha256  $tmp/bun.zip" | sha256sum -c -
+            unzip -q "$tmp/bun.zip" -d "$tmp"
+            install -m 0755 "$(find "$tmp" -type f -name bun | head -n 1)" /usr/local/bin/bun
+            rm -rf "$tmp"
+        - description: Installer claude-hud au commit de l'hôte
+          user: "0"
+          command: |
+            set -eu
+            commit=bc54b503ceff2cf1356a673b5aa7ed1cca551f80
+            rm -rf /opt/claude-hud
+            git init -q /opt/claude-hud
+            git -C /opt/claude-hud fetch -q --depth 1 https://github.com/jarrodwatts/claude-hud.git "$commit"
+            git -C /opt/claude-hud checkout -q FETCH_HEAD
+            [ "$(git -C /opt/claude-hud rev-parse HEAD)" = "$commit" ]
+      files:
+        - path: /home/agent/.claude/plugins/claude-hud/config.json
+          content: |
+            {
+              "lineLayout": "expanded",
+              "showSeparators": false,
+              "language": "en",
+              "pathLevels": 3,
+              "display": {
+                "showModel": true,
+                "showContextBar": true,
+                "showTools": true,
+                "showAgents": true,
+                "showTodos": true,
+                "showProject": true,
+                "showConfigCounts": false,
+                "showTokenBreakdown": false,
+                "showSpeed": true,
+                "showUsage": true,
+                "showDuration": false,
+                "showSessionName": false,
+                "showSessionTokens": false,
+                "showEffortLevel": true,
+                "showPromptCache": true,
+                "promptCacheTtlSeconds": 3600
+              },
+              "gitStatus": {
+                "enabled": true,
+                "showDirty": true,
+                "showAheadBehind": false,
+                "showFileStats": false
+              }
+            }
+        - path: /home/agent/.claude/statusline.sh
+          mode: "0755"
+          content: |
+            #!/usr/bin/env bash
+            # Copie de ~/.claude/statusline.sh de l'hôte : rendu claude-hud + ligne de diagnostic
+            # du prompt cache. Seuls les chemins de bun, de claude-hud et de jq changent.
+            payload=$(cat)
+
+            cols=${COLUMNS:-}
+            case "$cols" in "" | *[!0-9]*) cols=$({ stty size </dev/tty | awk '{print $2}'; } 2>/dev/null) ;; esac
+            case "$cols" in "" | *[!0-9]*) cols=120 ;; esac
+            export COLUMNS=$((cols > 4 ? cols - 4 : 1))
+
+            if [ -x /usr/local/bin/bun ] && [ -f /opt/claude-hud/src/index.ts ]; then
+              printf '%s' "$payload" | /usr/local/bin/bun --env-file /dev/null /opt/claude-hud/src/index.ts
+            fi
+
+            # ↓ = servi depuis le cache, ↑ = écrit en cache ce tour.
+            jq=/usr/bin/jq
+            [ -x "$jq" ] || exit 0
+
+            read -r ratio creation line <<<"$(printf '%s' "$payload" | "$jq" -r '
+              def fmt: if . >= 1000000 then ((.*10/1000000)|floor/10|tostring)+"M"
+                       elif . >= 1000 then ((./1000)|floor|tostring)+"k"
+                       else tostring end;
+              (.context_window.current_usage // {}) as $u
+              | (($u.cache_read_input_tokens // 0)) as $r
+              | (($u.cache_creation_input_tokens // 0)) as $c
+              | if ($r + $c) == 0 then "" else
+                  "\((($r*100)/($r+$c))|floor) \($c) cache ↓\($r|fmt) ↑\($c|fmt) \((($r*100)/($r+$c))|floor)%"
+                end')"
+
+            [ -n "$line" ] || exit 0
+
+            if [ "${creation:-0}" -gt 100000 ]; then
+              color=$'\033[33m'
+            elif [ "${ratio:-100}" -lt 50 ]; then
+              color=$'\033[33m'
+            else
+              color=$'\033[2m'
+            fi
+
+            printf '%s%s\033[0m\n' "$color" "$line"
+      startup:
+        # settings.json est réécrit à la création de la sandbox : la status line est reposée à chaque démarrage.
+        - description: Brancher la status line dans settings.json
+          user: agent
+          command: |
+            set -eu
+            settings=/home/agent/.claude/settings.json
+            [ -f "$settings" ] || echo '{}' > "$settings"
+            tmp=$(mktemp)
+            /usr/bin/jq '.statusLine = {type: "command", command: "bash /home/agent/.claude/statusline.sh", refreshInterval: 60}' \
+              "$settings" > "$tmp"
+            mv -f "$tmp" "$settings"
