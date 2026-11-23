@@ -18,6 +18,7 @@
           - yakuake
           - snapd
           - htop
+          - wl-clipboard
 
     - name: Add Google Chrome signing key
       ansible.builtin.get_url:
