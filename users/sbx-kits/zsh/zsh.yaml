@@ -1,0 +1,71 @@
+# syntax=docker/sandbox-kit:3
+#
+# Mixin Docker Sandboxes (sbx) personnel : zsh + oh-my-zsh pour les shells ouverts à la main dans la
+# VM (herdr open-shell avec "shell": "zsh", ou sbx exec -it <sandbox> zsh). Sous-ensemble du .zshrc
+# de l'hôte (antigen) : plugins utiles en sandbox, commits épinglés, sans mise à jour auto.
+# Thème powerlevel10k avec la config de l'hôte si ~/.p10k.zsh est monté
+# ("/home/joan/.p10k.zsh:/home/agent/.p10k.zsh:ro"), sinon robbyrussell.
+# Le shell de login de agent reste bash : les commandes de Claude ne chargent pas oh-my-zsh.
+#
+# Usage : sbx run claude --kit ~/workspace/perso/ansible-dev-workstation/users/sbx-kits/zsh .
+schemaVersion: "3"
+kind: mixin
+displayName: zsh + oh-my-zsh
+description: zsh, oh-my-zsh et quelques plugins pour les shells interactifs de la VM
+capabilities:
+  - type: com.docker.sandbox/network-policy@1
+    config:
+      install:
+        allow:
+          - deb.debian.org:80
+          - github.com:443
+  - type: com.docker.sandbox/lifecycle@1
+    config:
+      install:
+        - description: Installer zsh
+          user: "0"
+          command: |
+            set -eu
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -q
+            apt-get install -y -q --no-install-recommends zsh
+            rm -rf /var/lib/apt/lists/*
+        - description: Installer oh-my-zsh, ses plugins et powerlevel10k (commits épinglés)
+          user: "0"
+          command: |
+            set -eu
+            fetch() { # <dépôt> <commit> <dossier>
+              rm -rf "$3"
+              git init -q "$3"
+              git -C "$3" fetch -q --depth 1 "https://github.com/$1.git" "$2"
+              git -C "$3" checkout -q FETCH_HEAD
+              [ "$(git -C "$3" rev-parse HEAD)" = "$2" ]
+            }
+            fetch ohmyzsh/ohmyzsh 93b87c9c9aaae2f56b41a1f7fdf64fc1d603a9b7 /opt/zsh/ohmyzsh
+            fetch zsh-users/zsh-autosuggestions 85919cd1ffa7d2d5412f6d3fe437ebdbeeec4fc5 \
+              /opt/zsh/custom/plugins/zsh-autosuggestions
+            fetch zdharma-continuum/fast-syntax-highlighting 4672ad5dd9ad68a7effc1476d65afb7c584ce2b3 \
+              /opt/zsh/custom/plugins/fast-syntax-highlighting
+            fetch agkozak/zsh-z 7f8ff4df11b50a14e3666c7cd212baa399c9b92a /opt/zsh/custom/plugins/zsh-z
+            fetch romkatv/powerlevel10k 50a35cc8d9f1488d18fb8aea6cddcfc31189cc9f \
+              /opt/zsh/custom/themes/powerlevel10k
+      files:
+        - path: /home/agent/.zshrc
+          mode: "0644"
+          content: |
+            # Posé par le kit sbx zsh (ansible-dev-workstation/users/sbx-kits/zsh).
+            export ZSH=/opt/zsh/ohmyzsh
+            ZSH_CUSTOM=/opt/zsh/custom
+            ZSH_CACHE_DIR=$HOME/.cache/oh-my-zsh
+            mkdir -p "$ZSH_CACHE_DIR/completions"
+            DISABLE_AUTO_UPDATE=true
+            zstyle ':omz:update' mode disabled
+            if [[ -r ~/.p10k.zsh ]]; then
+              ZSH_THEME=powerlevel10k/powerlevel10k
+            else
+              ZSH_THEME=robbyrussell
+            fi
+            plugins=(git mvn docker common-aliases fancy-ctrl-z zsh-z zsh-autosuggestions fast-syntax-highlighting)
+            source $ZSH/oh-my-zsh.sh
+            [[ -r ~/.p10k.zsh ]] && source ~/.p10k.zsh
+            unsetopt share_history
